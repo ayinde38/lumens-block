@@ -11,8 +11,10 @@ import ReactFlow, {
   type ReactFlowInstance,
 } from "reactflow"
 import "reactflow/dist/style.css"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import Toolbar from "./Toolbar"
+import ShortcutsOverlay from "./ShortcutsOverlay"
+import { useCallback, useState } from "react"
 import DeployButton from "./DeployButton"
 import BlockNode from "./BlockNode"
 import TemplatesModal from "./TemplatesModal"
@@ -39,6 +41,7 @@ const initialNodes = [
 export default function BlockEditor() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
+  const [shortcutsOpen, setShortcutsOpen] = useState(false)
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null)
   const [isTemplatesOpen, setIsTemplatesOpen] = useState(false)
 
@@ -47,6 +50,18 @@ export default function BlockEditor() {
     [setEdges]
   )
 
+  // Open overlay on `?` key press
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "?" && !shortcutsOpen) setShortcutsOpen(true)
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [shortcutsOpen])
+
+  return (
+    <div className="relative h-full w-full">
+      <Toolbar onOpenShortcuts={() => setShortcutsOpen(true)} />
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault()
     event.dataTransfer.dropEffect = "move"
@@ -134,6 +149,7 @@ export default function BlockEditor() {
         </ReactFlow>
       </div>
       <DeployButton nodes={nodes} edges={edges} />
+      {shortcutsOpen && <ShortcutsOverlay onClose={() => setShortcutsOpen(false)} />}
 
       <TemplatesModal
         isOpen={isTemplatesOpen}
