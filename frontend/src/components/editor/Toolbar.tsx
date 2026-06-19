@@ -5,14 +5,11 @@ import { FolderOpen } from "lucide-react"
 const BLOCK_TYPES = ["Condition", "Transfer", "Storage", "Event", "Auth"]
 
 interface Props {
+  onOpenTemplates: () => void
   onOpenShortcuts: () => void
 }
 
-export default function Toolbar({ onOpenShortcuts }: Props) {
-  onOpenTemplates: () => void
-}
-
-export default function Toolbar({ onOpenTemplates }: Props) {
+export default function Toolbar({ onOpenTemplates, onOpenShortcuts }: Props) {
   const onDragStart = (event: React.DragEvent, blockType: string) => {
     event.dataTransfer.setData("application/blocktype", blockType)
   }
@@ -30,6 +27,7 @@ export default function Toolbar({ onOpenTemplates }: Props) {
           ?
         </button>
       </div>
+
       {BLOCK_TYPES.map((type) => (
         <div
           key={type}
@@ -40,6 +38,7 @@ export default function Toolbar({ onOpenTemplates }: Props) {
           {type}
         </div>
       ))}
+
       <div className="mt-2 pt-2 border-t border-gray-100">
         <button
           onClick={onOpenTemplates}
@@ -52,4 +51,3 @@ export default function Toolbar({ onOpenTemplates }: Props) {
     </div>
   )
 }
-
