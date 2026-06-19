@@ -19,6 +19,7 @@ import SimulateButton from "./SimulateButton"
 import BlockNode from "./BlockNode"
 import TemplatesModal from "./TemplatesModal"
 import type { ContractGraph } from "@/lib/stellar/deploy"
+import type { Edge, Node } from "reactflow"
 
 const nodeTypes = {
   Condition: BlockNode,
@@ -63,6 +64,10 @@ export default function BlockEditor() {
       const type = event.dataTransfer.getData("application/blocktype")
       if (typeof type === "undefined" || !type) return
 
+      if (typeof type === "undefined" || !type) {
+        return
+      }
+
       const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
@@ -102,10 +107,18 @@ export default function BlockEditor() {
       if (!confirmLoad) return
     }
 
-    setNodes(graph.nodes)
-    setEdges(graph.edges)
+    setNodes(graph.nodes as Node[])
+    setEdges(graph.edges as Edge[])
     setIsTemplatesOpen(false)
   }
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "?" && !shortcutsOpen) setShortcutsOpen(true)
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [shortcutsOpen])
 
   return (
     <div className="relative h-full w-full">
@@ -142,7 +155,6 @@ export default function BlockEditor() {
       </div>
 
       {shortcutsOpen && <ShortcutsOverlay onClose={() => setShortcutsOpen(false)} />}
-
       <TemplatesModal
         isOpen={isTemplatesOpen}
         onClose={() => setIsTemplatesOpen(false)}

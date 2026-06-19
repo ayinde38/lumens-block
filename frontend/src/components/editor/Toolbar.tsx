@@ -42,7 +42,7 @@ export default function Toolbar({ onOpenTemplates, onOpenShortcuts }: Props) {
       <div className="mt-2 pt-2 border-t border-gray-100">
         <button
           onClick={onOpenTemplates}
-          className="flex w-full items-center justify-center gap-1.5 rounded bg-blue-600 px-3 py-2 text-xs font-bold text-white shadow hover:bg-blue-700 transition-colors"
+          className="flex w-full items-center justify-center gap-1.5 rounded bg-blue-600 px-3 py-2 text-xs font-bold text-white shadow transition-colors hover:bg-blue-700"
         >
           <FolderOpen size={14} />
           Templates
